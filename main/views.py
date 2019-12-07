@@ -1,26 +1,9 @@
 from flask import Flask, jsonify, request
 from flask.views import MethodView
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
-from flask_migrate import Migrate
 from abc import ABCMeta
-
-from models import User, Todo
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(140), nullable=False)
-    state = db.Column(db.Integer, nullable=False)
+from main import app
+import main.models
 
 class APIBaseError(Exception):
     status_code = None
@@ -84,12 +67,12 @@ class Serializer():
 
 class UserSerializer(Serializer):
     class Meta:
-        model = User
+        model = main.models.User
         fields = ['id', 'username', 'email']
 
 class TodoSerializer(Serializer):
     class Meta:
-        model = Todo
+        model = main.models.Todo
         fields = ['id', 'description', 'state']
 
 class RestView(metaclass=ABCMeta):
@@ -146,7 +129,4 @@ user_view.register()
 
 todo_view=TodoView()
 todo_view.register()
-
-if __name__ == '__main__':
-    app.run()
 
