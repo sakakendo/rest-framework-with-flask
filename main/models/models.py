@@ -9,3 +9,11 @@ class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(140), nullable=False)
     state = db.Column(db.Integer, nullable=False)
+
+class File(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    path = db.Column(db.String(140), nullable=False)
+
+#    def create(self, file):
+#        self.id = uuid
+
